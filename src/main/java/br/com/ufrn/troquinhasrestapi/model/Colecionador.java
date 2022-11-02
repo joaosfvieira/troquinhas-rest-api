@@ -37,6 +37,10 @@ public class Colecionador {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contato_id", referencedColumnName = "id")
     Contato contato;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "reputacao_colecionador_id", referencedColumnName = "id")
+    ReputacaoColecionador reputacao;
     
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
     @JoinTable(name="colecionador_has_figurinhas",
