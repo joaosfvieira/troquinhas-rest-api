@@ -11,7 +11,11 @@ import javax.persistence.*;
 @Table(name = "reputacao_colecionador")
 public class ReputacaoColecionador {
 
-    @OneToOne(mappedBy = "reputacao_colecionador")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @OneToOne(mappedBy = "reputacao")
     private Colecionador colecionador;
 
     @Column(name = "reputacao")

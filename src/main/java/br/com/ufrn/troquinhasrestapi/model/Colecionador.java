@@ -1,6 +1,8 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
+import lombok.Data;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 import java.util.Set;
@@ -9,6 +11,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Data
 @Entity
 @Getter
 @Setter

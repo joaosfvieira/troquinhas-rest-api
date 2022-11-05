@@ -16,4 +16,5 @@ public class Admin {
 
     @Column(length = 50)
     private String nome;    
+
 }
