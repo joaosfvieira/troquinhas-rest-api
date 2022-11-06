@@ -1,5 +1,6 @@
 package br.com.ufrn.troquinhasrestapi.service;
 
+import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
 import br.com.ufrn.troquinhasrestapi.model.Figurinha;
 import br.com.ufrn.troquinhasrestapi.model.PontoTroca;
@@ -7,19 +8,25 @@ import br.com.ufrn.troquinhasrestapi.repository.FigurinhaRepository;
 import br.com.ufrn.troquinhasrestapi.repository.PontoTrocaRepository;
 import br.com.ufrn.troquinhasrestapi.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
     @Autowired
     UsuarioRepository usuarioRepository;
     @Autowired
     PontoTrocaRepository pontoTrocaRepository;
     @Autowired
     FigurinhaRepository figurinhaRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public Colecionador addUsuario(Colecionador c){ return usuarioRepository.save(c); };
 
@@ -68,5 +75,32 @@ public class UsuarioService {
             return c.get();
         }
         return null;
+    }
+
+    public UserDetails autenticar(Colecionador colecionador ){
+        UserDetails user = loadUserByUsername(colecionador.getEmail());
+        boolean senhasBatem = passwordEncoder.matches( colecionador.getSenha(), user.getPassword() );
+
+        if(senhasBatem){
+            return user;
+        }
+
+        throw new SenhaInvalidaException();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        Colecionador colecionador = usuarioRepository.findColecionadorByEmail(username);
+
+                //.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
+
+        String[] roles = colecionador.isAdmin() ? new String[] { "ADMIN", "USER" } : new String[] { "USER" };
+
+        return User
+                .builder()
+                .username(colecionador.getEmail())
+                .password(colecionador.getSenha())
+                .roles(roles)
+                .build();
     }
 }

@@ -1,7 +1,6 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -12,6 +11,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "colecionador")
 public class Colecionador {
     @Id
@@ -27,8 +29,10 @@ public class Colecionador {
     @Column(unique=true, length = 50)
     private String email;
     
-    @JsonIgnore
 	private String senha;
+
+    @Column
+    private boolean admin;
 
     @ManyToOne
     @JoinColumn(name="pontos_troca_id")
