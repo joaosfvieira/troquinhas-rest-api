@@ -11,6 +11,8 @@ import br.com.ufrn.troquinhasrestapi.service.RoleService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import javax.management.relation.RoleNotFoundException;
 
 import org.springframework.http.HttpStatus;
@@ -29,9 +31,14 @@ public class ColecionadorController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    @GetMapping
+    public List<Colecionador> getColecionadores(){
+        return usuarioService.getAllUsuarios();
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Colecionador salvar(@RequestBody CreateUserDTO createUserDTO ) throws RoleNotFoundException{
+    public Colecionador salvar(@RequestBody CreateUserDTO createUserDTO) throws RoleNotFoundException{
         String senhaCriptografada = passwordEncoder.encode(createUserDTO.getSenha());
         createUserDTO.setSenha(senhaCriptografada);
         
@@ -60,13 +67,27 @@ public class ColecionadorController {
         return colecionador;
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteColecionador(@PathVariable Integer id){
+        usuarioService.removeUsuario(id);
+    }
+
+    @GetMapping("/{id}")
+    public Colecionador getColecionador(@PathVariable Integer id){
+        return usuarioService.getUsuarioById(id);
+    }
+
     /*
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Colecionador salvar(@RequestBody Colecionador colecionador ){
-        String senhaCriptografada = passwordEncoder.encode(colecionador.getSenha());
-        colecionador.setSenha(senhaCriptografada);
-        return usuarioService.addUsuario(colecionador);
+    @PutMapping("/{id}")
+    public Colecionador updateColecionador(@RequestBody CreateUserDTO createUserDTO, @PathVariable Integer id) throws Exception{
+        Colecionador colecionadorA = usuarioService.getUsuarioById(id);
+        if(createUserDTO != null){
+            if(createUserDTO.getEmail() == null || createUserDTO.getSenha() == null){
+                throw new Exception("ERROU AI PAI");
+            }
+            usuarioService.atualizaUsuario(colecionadorA);
+        }
+        return colecionadorA;
     }
     */
 
@@ -83,5 +104,7 @@ public class ColecionadorController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
+
 }
 
