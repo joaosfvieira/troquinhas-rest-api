@@ -2,11 +2,14 @@ package br.com.ufrn.troquinhasrestapi.model;
 
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Getter
@@ -31,8 +34,10 @@ public class Colecionador {
     
 	private String senha;
 
+    /*
     @Column
     private boolean admin;
+    */
 
     @ManyToOne
     @JoinColumn(name="pontos_troca_id")
@@ -40,7 +45,11 @@ public class Colecionador {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contato_id", referencedColumnName = "id")
+    @JsonManagedReference
     Contato contato;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reputacao_colecionador_id", referencedColumnName = "id")
@@ -57,5 +66,4 @@ public class Colecionador {
 			joinColumns=@JoinColumn(name="colecionador_id"),
 			inverseJoinColumns=@JoinColumn(name="figurinha_id"))
 	private Set<Figurinha> figurinhasDesejadas;
-
 }

@@ -4,6 +4,7 @@ import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
 import br.com.ufrn.troquinhasrestapi.model.Figurinha;
 import br.com.ufrn.troquinhasrestapi.model.PontoTroca;
+import br.com.ufrn.troquinhasrestapi.model.Role;
 import br.com.ufrn.troquinhasrestapi.repository.FigurinhaRepository;
 import br.com.ufrn.troquinhasrestapi.repository.PontoTrocaRepository;
 import br.com.ufrn.troquinhasrestapi.repository.UsuarioRepository;
@@ -13,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 import java.util.List;
 import java.util.Optional;
@@ -93,8 +96,19 @@ public class UsuarioService implements UserDetailsService {
         Colecionador colecionador = usuarioRepository.findColecionadorByEmail(username);
 
                 //.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
+        Collection<Role> userRoles = colecionador.getRoles();
 
-        String[] roles = colecionador.isAdmin() ? new String[] { "ADMIN", "USER" } : new String[] { "USER" };
+        String[] roles = null;
+
+        for (Role role : userRoles) {
+            if(role.getName() == "Admin"){
+                roles =  new String[] { "ADMIN", "USER" };
+            }else{
+                roles =  new String[] {"USER" };
+            }
+        }
+
+        //String[] roles =  new String[] { "ADMIN", "USER" } : new String[] { "USER" };
 
         return User
                 .builder()
@@ -102,5 +116,9 @@ public class UsuarioService implements UserDetailsService {
                 .password(colecionador.getSenha())
                 .roles(roles)
                 .build();
+    }
+
+    public Colecionador getUsuarioByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 }
