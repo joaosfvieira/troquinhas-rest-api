@@ -16,4 +16,6 @@ public interface UsuarioRepository extends JpaRepository<Colecionador, Integer> 
 
     @Query("SELECT u from Colecionador u WHERE email = :email")
     public Colecionador findColecionadorByEmail(@Param("email") String email);
+
+    public Colecionador findByEmail(String email);
 }
