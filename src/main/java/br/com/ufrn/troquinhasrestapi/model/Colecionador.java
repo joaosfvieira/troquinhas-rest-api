@@ -34,11 +34,6 @@ public class Colecionador {
     
 	private String senha;
 
-    /*
-    @Column
-    private boolean admin;
-    */
-
     @ManyToOne
     @JoinColumn(name="pontos_troca_id")
     private PontoTroca pontoTroca;
