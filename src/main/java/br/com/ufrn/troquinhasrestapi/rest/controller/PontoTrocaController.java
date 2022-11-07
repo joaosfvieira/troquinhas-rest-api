@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.ufrn.troquinhasrestapi.service.PontoTrocaService;
 import lombok.RequiredArgsConstructor;
 
-@RestController @RequiredArgsConstructor @RequestMapping("/pontoTroca")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/ponto-trocas")
 public class PontoTrocaController {
 
     @Autowired
