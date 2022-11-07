@@ -17,7 +17,9 @@ import br.com.ufrn.troquinhasrestapi.service.RoleService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
-@RestController @RequiredArgsConstructor @RequestMapping("/roles")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/roles")
 public class RoleController {
     
     @Autowired
