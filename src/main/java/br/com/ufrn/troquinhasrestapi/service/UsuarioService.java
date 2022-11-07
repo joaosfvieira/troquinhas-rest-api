@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -99,12 +100,14 @@ public class UsuarioService implements UserDetailsService {
         Collection<Role> userRoles = colecionador.getRoles();
 
         String[] roles = null;
-
+        System.out.println(" !!!!!!!  roles = null  !!!!!!!!!!!!!!");
         for (Role role : userRoles) {
-            if(role.getName() == "Admin"){
+            if(Objects.equals(role.getName(), "Admin")){
                 roles =  new String[] { "ADMIN", "USER" };
+                System.out.println(" ROLES = ADMIN USER");
             }else{
                 roles =  new String[] {"USER" };
+                System.out.println(" ROLES = ADMIN USER");
             }
         }
 

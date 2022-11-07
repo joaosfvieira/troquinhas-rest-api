@@ -1,7 +1,6 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -10,6 +9,9 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "figurinhas")
 public class Figurinha {
 

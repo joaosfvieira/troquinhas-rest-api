@@ -8,13 +8,7 @@ import javax.naming.NameNotFoundException;
 import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.ufrn.troquinhasrestapi.model.Role;
@@ -23,37 +17,36 @@ import br.com.ufrn.troquinhasrestapi.service.RoleService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
-@RestController @RequiredArgsConstructor @RequestMapping("/role")
+@RestController @RequiredArgsConstructor @RequestMapping("/roles")
 public class RoleController {
     
     @Autowired
     private RoleService roleService;
 
-    @PostMapping
+    @GetMapping
     public ResponseEntity<List<Role>> getRoles(){
         return ResponseEntity.ok().body(roleService.getRoles());
     }
 
-    @PostMapping("/save")
+    @PostMapping()
     public ResponseEntity<Role> saveRole(@RequestBody Role role){
-        System.out.println("\n\nTESTANDO SAVEROLE... \n\n");
         Role rolex = roleService.saveRole(role);
         return ResponseEntity.ok().body(rolex);
     }
 
-    @PostMapping("/addToUser")
+    @PostMapping("/colecionador")
     public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserDTO roleToUserDTO){
         roleService.addRoleToUser(roleToUserDTO.getEmail(), roleToUserDTO.getRoleName());
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<?> deleteRole(@PathVariable Long id) throws NameNotFoundException{
         roleService.delete(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/getRole/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Role> getRole(@PathVariable long id){
         return ResponseEntity.ok().body(roleService.getRole(id));
     }
