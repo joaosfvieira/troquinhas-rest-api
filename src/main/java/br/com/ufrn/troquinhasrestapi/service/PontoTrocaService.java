@@ -22,9 +22,10 @@ public class PontoTrocaService {
         return pontoTroca;
     };
 
-    public List<PontoTroca> getAllPontoTrocas(){ return pontoTrocaRepository.findAll(); }
+    public List<PontoTroca> getAllPontoTroca(){ return pontoTrocaRepository.findAll(); }
 
     public void removePontoTroca(Integer id){ pontoTrocaRepository.deleteById(id); }
 
     public PontoTroca atualizaPontoTroca(PontoTroca p){ return pontoTrocaRepository.save(p); }
+
 }

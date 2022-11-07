@@ -2,8 +2,10 @@ package br.com.ufrn.troquinhasrestapi.service;
 
 import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
+import br.com.ufrn.troquinhasrestapi.model.Contato;
 import br.com.ufrn.troquinhasrestapi.model.Figurinha;
 import br.com.ufrn.troquinhasrestapi.model.PontoTroca;
+import br.com.ufrn.troquinhasrestapi.model.ReputacaoColecionador;
 import br.com.ufrn.troquinhasrestapi.model.Role;
 import br.com.ufrn.troquinhasrestapi.repository.FigurinhaRepository;
 import br.com.ufrn.troquinhasrestapi.repository.PontoTrocaRepository;
@@ -123,5 +125,21 @@ public class UsuarioService implements UserDetailsService {
 
     public Colecionador getUsuarioByEmail(String email) {
         return usuarioRepository.findByEmail(email);
+    }
+
+    public void deleteContatoById(Integer id){
+        usuarioRepository.deleteContatoById(id);
+    }
+
+    public Colecionador getColecionadorByContato(Contato c){
+        return usuarioRepository.getColecionadorByContato(c.getId());
+    }
+
+    public Colecionador getColecionadorByReputacaoColecionador(ReputacaoColecionador reputacaoColecionador) {
+        return usuarioRepository.getColecionadorByReputacaoColecionador(reputacaoColecionador.getId());
+    }
+
+    public Colecionador getColecionadorByPontoTroca(PontoTroca pontoTroca) {
+        return usuarioRepository.getColecionadorByPontoTroca(pontoTroca.getId());
     }
 }

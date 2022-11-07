@@ -43,12 +43,13 @@ public class JwtService {
 
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(chaveAssinatura));
 
-        return Jwts
-                .builder()
-                .setSubject(colecionador.getEmail())
-                .setExpiration(data)
-                .signWith(key)
-                .compact();
+        return "rafa";
+        // return Jwts
+        //         .builder()
+        //         .setSubject(colecionador.getEmail())
+        //         .setExpiration(data)
+        //         .signWith(key)
+        //         .compact();
     }
 
     

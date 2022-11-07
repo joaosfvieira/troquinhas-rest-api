@@ -51,8 +51,9 @@ public class Colecionador {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne //(cascade = CascadeType.ALL)
     @JoinColumn(name = "reputacao_colecionador_id", referencedColumnName = "id")
+    @JsonManagedReference
     ReputacaoColecionador reputacao;
     
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})

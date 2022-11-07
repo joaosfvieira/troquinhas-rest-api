@@ -30,7 +30,7 @@ public class ContatoController {
         return ResponseEntity.ok().body(contatoService.getAllContatos());
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Contato> saveContato(@RequestBody ContatoToUserDTO contatoToUserDTO){
         Contato toSaveContato = new Contato();
 
@@ -48,13 +48,18 @@ public class ContatoController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteContato(@PathVariable Long id){
+    public ResponseEntity<?> deleteContato(@PathVariable Integer id){
+        Colecionador colecionador = usuarioService.getColecionadorByContato(contatoService.getContatoById(id).orElseThrow());
+        colecionador.setContato(null);
+        usuarioService.atualizaUsuario(colecionador);
         contatoService.removeContato(id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Contato> getContato(@PathVariable long id){
+    public ResponseEntity<Contato> getContato(@PathVariable Integer id){
         return ResponseEntity.ok().body(contatoService.getContatoById(id).orElseThrow(() -> new ContatoNotFoundException()));
     }
+
+    
 }
