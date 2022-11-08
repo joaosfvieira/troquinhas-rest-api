@@ -24,7 +24,7 @@ import br.com.ufrn.troquinhasrestapi.service.PontoTrocaService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +38,7 @@ public class PontoTrocaController {
     private UsuarioService usuarioService;
 
     @GetMapping
+    @ResponseStatus(OK)
     private List<PontoTroca> getAllPontoTroca() {
         return pontoTrocaService.getAllPontoTroca();
     }
@@ -49,20 +50,21 @@ public class PontoTrocaController {
     }
 
     @GetMapping("{id}")
+    @ResponseStatus(OK)
     public ResponseEntity<PontoTroca> getById(@PathVariable Integer id){
         return ResponseEntity.ok().body(pontoTrocaService.getPontoTrocaById(id).orElseThrow());
     }
     
     @PutMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(NO_CONTENT)
     public void update( @PathVariable Integer id, @RequestBody PontoTroca pontoTroca ){
-        PontoTroca newPontoTroca = pontoTrocaService.getPontoTrocaById(id).orElseThrow();
-        newPontoTroca.setNome(pontoTroca.getNome());
-        pontoTrocaService.atualizaPontoTroca(newPontoTroca);
+        PontoTroca pontoTrocaAtualizado = pontoTrocaService.getPontoTrocaById(id).orElseThrow();
+        pontoTrocaAtualizado.setNome(pontoTroca.getNome());
+        pontoTrocaService.atualizaPontoTroca(pontoTrocaAtualizado);
     }
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Integer id){
         Optional<PontoTroca> pontoTroca = pontoTrocaService.getPontoTrocaById(id);
 

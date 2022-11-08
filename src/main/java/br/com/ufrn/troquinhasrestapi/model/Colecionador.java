@@ -1,5 +1,7 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -17,6 +19,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @AllArgsConstructor
 @Builder
 @Table(name = "colecionador")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Colecionador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,13 +29,13 @@ public class Colecionador {
 
     @Column(length = 50)
     private String nome;
-    
+
     @Column(length = 50)
     private String sobrenome;
-    
+
     @Column(unique=true, length = 50)
     private String email;
-    
+
 	private String senha;
 
     @ManyToOne
@@ -52,15 +57,13 @@ public class Colecionador {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
     @JoinTable(name="colecionador_has_figurinhas",
-    joinColumns=@JoinColumn(name="colecionador_id"),
-    inverseJoinColumns=@JoinColumn(name="figurinha_id"))
-    @JsonManagedReference(value="colecionador-figurinhas-adquiridas")
+            joinColumns=@JoinColumn(name="colecionador_id"),
+            inverseJoinColumns=@JoinColumn(name="figurinha_id"))
     private Set<Figurinha> figurinhasAdquiridas;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
 	@JoinTable(name="colecionador_wants_figurinhas",
 			joinColumns=@JoinColumn(name="colecionador_id"),
 			inverseJoinColumns=@JoinColumn(name="figurinha_id"))
-    @JsonManagedReference(value="colecionador-figurinhas-desejadas")
 	private Set<Figurinha> figurinhasDesejadas;
 }

@@ -21,7 +21,7 @@ import br.com.ufrn.troquinhasrestapi.model.ReputacaoColecionador;
 import br.com.ufrn.troquinhasrestapi.service.ReputacaoColecionadorService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/reputacao-colecionador")
@@ -33,6 +33,7 @@ public class ReputacaoColecionadorController {
     UsuarioService usuarioService;
 
     @GetMapping
+    @ResponseStatus(OK)
     private List<ReputacaoColecionador> getAllReputacaoColecionador() {
         return reputacaoColecionadorService.getAllReputacaoColecionador();
     }
@@ -48,6 +49,7 @@ public class ReputacaoColecionadorController {
 
     
     @GetMapping("{id}")
+    @ResponseStatus(OK)
     public ResponseEntity<ReputacaoColecionador> getById(@PathVariable Integer id){
         Optional<ReputacaoColecionador> reputacaoColecionador = reputacaoColecionadorService.getReputacaoColecionadorById(id);
         return reputacaoColecionador.map(value ->
@@ -56,7 +58,7 @@ public class ReputacaoColecionadorController {
     }
     
     @PutMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(NO_CONTENT)
     public void update( @PathVariable Integer id, @RequestBody ReputacaoColecionador reputacaoColecionador ){
         ReputacaoColecionador newReputacaoColecionador = reputacaoColecionadorService.getReputacaoColecionadorById(id).orElseThrow();
         newReputacaoColecionador.setReputacao(reputacaoColecionador.getReputacao());
@@ -64,7 +66,7 @@ public class ReputacaoColecionadorController {
     }
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Integer id){
         Colecionador colecionador = usuarioService.getColecionadorByReputacaoColecionador(reputacaoColecionadorService.getReputacaoColecionadorById(id).orElseThrow());
         colecionador.setReputacaoColecionador(null);

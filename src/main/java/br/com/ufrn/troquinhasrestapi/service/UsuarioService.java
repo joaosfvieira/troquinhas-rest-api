@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PreRemove;
 import java.util.*;
 
 @Service
@@ -144,4 +145,20 @@ public class UsuarioService implements UserDetailsService {
     }
 
 
+//    public ColecionadorDTO removerFigurinhaAdquirida(Integer idColecionador, Integer idFigurinha) {
+//        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+//        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+//        colecionador.getFigurinhasDesejadas().remove(figurinha);
+//        save(colecionador);
+//        usuarioRepository.removeFromColecionadorHasFigurinhasTable(idColecionador, idFigurinha);
+//        return converteColecionadorParaDTO(colecionador);
+//    }
+//
+//    public ColecionadorDTO removerFigurinhaDesejada(Integer idColecionador, Integer idFigurinha) {
+//        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+//        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+//        colecionador.getFigurinhasDesejadas().remove(figurinha);
+//        save(colecionador);
+//        return converteColecionadorParaDTO(colecionador);
+//    }
 }

@@ -1,6 +1,6 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import java.util.Set;
@@ -14,6 +14,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "figurinhas")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Figurinha {
 
     @Id
@@ -27,15 +30,11 @@ public class Figurinha {
     private String raridade;
     
     @ManyToMany(mappedBy = "figurinhasAdquiridas")
-    @JsonBackReference(value="colecionador-figurinhas-adquiridas")
-//    joinColumns=@JoinColumn(name="figurinha_id"),
-//    inverseJoinColumns=@JoinColumn(name="colecionador_id"))
+    @JsonIgnore
     private Set<Colecionador> colecionadoresPossuem;
 
     @ManyToMany(mappedBy = "figurinhasDesejadas")
-    @JsonBackReference(value="colecionador-figurinhas-desejadas")
-//    joinColumns=@JoinColumn(name="figurinha_id"),
-//    inverseJoinColumns=@JoinColumn(name="colecionador_id"))
+    @JsonIgnore
     private Set<Colecionador> colecionadoresDesejam;
 
 }

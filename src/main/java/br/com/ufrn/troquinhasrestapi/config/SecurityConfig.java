@@ -32,23 +32,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> {
                             try {
                                 auth
+                                        .antMatchers(HttpMethod.POST, "/colecionadores/auth")
+                                        .permitAll()
                                         .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v2/api-docs", "/webjars/**")
                                         .permitAll()
-                                        .antMatchers(HttpMethod.GET,"/figurinhas/**")
-                                        .permitAll()
-                                        .antMatchers(HttpMethod.POST, "/colecionadores/**")
-                                        .permitAll()
-                                        .antMatchers("/colecionadores/**","/figurinhas/**","/reputacao-colecionador/**")
-                                        .permitAll()
-                                        .antMatchers("/ponto-trocas/**")
-                                        .permitAll()
-                                        .antMatchers(HttpMethod.POST, "/roles/**")
-                                        //.hasRole("Admin")
-                                        .permitAll()
-                                        .antMatchers("/contatos/**")
-                                        .permitAll()
-                                        .antMatchers("/roles/**")
-                                        .permitAll()
+
+//                                        .antMatchers(HttpMethod.POST, "/ponto-trocas", "/roles")
+//                                        .hasRole("Admin")
+
+                                        .antMatchers(HttpMethod.GET, "/**")
+                                        .authenticated()
                                         .anyRequest().authenticated()
                                         .and()
                                         .sessionManagement()
