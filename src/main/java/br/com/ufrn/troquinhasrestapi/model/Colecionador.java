@@ -54,17 +54,19 @@ public class Colecionador {
     @OneToOne //(cascade = CascadeType.ALL)
     @JoinColumn(name = "reputacao_colecionador_id", referencedColumnName = "id")
     @JsonManagedReference
-    ReputacaoColecionador reputacao;
-    
+    private ReputacaoColecionador reputacao;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
     @JoinTable(name="colecionador_has_figurinhas",
     joinColumns=@JoinColumn(name="colecionador_id"),
     inverseJoinColumns=@JoinColumn(name="figurinha_id"))
+    @JsonManagedReference
     private Set<Figurinha> figurinhasAdquiridas;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
 	@JoinTable(name="colecionador_wants_figurinhas",
 			joinColumns=@JoinColumn(name="colecionador_id"),
 			inverseJoinColumns=@JoinColumn(name="figurinha_id"))
+    @JsonManagedReference
 	private Set<Figurinha> figurinhasDesejadas;
 }

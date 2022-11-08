@@ -10,6 +10,7 @@ import br.com.ufrn.troquinhasrestapi.model.Role;
 import br.com.ufrn.troquinhasrestapi.repository.FigurinhaRepository;
 import br.com.ufrn.troquinhasrestapi.repository.PontoTrocaRepository;
 import br.com.ufrn.troquinhasrestapi.repository.UsuarioRepository;
+import br.com.ufrn.troquinhasrestapi.rest.dto.ColecionadorDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,14 +31,14 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     PontoTrocaRepository pontoTrocaRepository;
     @Autowired
-    FigurinhaRepository figurinhaRepository;
+    FigurinhaService figurinhaService;
     @Autowired
     PasswordEncoder passwordEncoder;
 
     public Colecionador addUsuario(Colecionador c){ return usuarioRepository.save(c); };
 
-    public Colecionador getUsuarioById(Integer id){
-        return usuarioRepository.findById(id).orElseThrow(() -> null);
+    public Optional<Colecionador> getUsuarioById(Integer id){
+        return usuarioRepository.findById(id);
     };
 
     public List<Colecionador> getAllUsuarios(){ return usuarioRepository.findAll(); }
@@ -46,26 +47,19 @@ public class UsuarioService implements UserDetailsService {
 
     public Colecionador atualizaUsuario(Colecionador c){ return usuarioRepository.save(c); }
 
-    public Figurinha adicionarFigurinhaAdquirida(Integer id, Integer idFigurinha) {
-        Optional<Figurinha> f = figurinhaRepository.findById(idFigurinha);
-        Optional<Colecionador> c = usuarioRepository.findById(id);
-        if(f.isPresent() && c.isPresent()) {
-            c.get().getFigurinhasAdquiridas().add(f.get());
-            usuarioRepository.save(c.get());
-            return f.get();
-        }
-        return null;
+    public ColecionadorDTO adicionarFigurinhaAdquirida(Integer idColecionador, Integer idFigurinha) {
+        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+        colecionador.getFigurinhasAdquiridas().add(figurinha);
+        return converteColecionadorParaDTO(colecionador);
     }
 
-    public Figurinha adicionarFigurinhaDesejada(Integer id, Integer idFigurinha) {
-        Optional<Figurinha> f = figurinhaRepository.findById(idFigurinha);
-        Optional<Colecionador> c = usuarioRepository.findById(id);
-        if(f.isPresent() && c.isPresent()) {
-            c.get().getFigurinhasDesejadas().add(f.get());
-            usuarioRepository.save(c.get());
-            return f.get();
-        }
-        return null;
+    public ColecionadorDTO adicionarFigurinhaDesejada(Integer idColecionador, Integer idFigurinha) {
+        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+        colecionador.getFigurinhasDesejadas().add(figurinha);
+        atualizaUsuario(colecionador);
+        return converteColecionadorParaDTO(colecionador);
     }
 
     public List<Colecionador> getAllColecionadoresWherePontoTrocaIdEqualsId(Integer id){
@@ -142,4 +136,20 @@ public class UsuarioService implements UserDetailsService {
     public Colecionador getColecionadorByPontoTroca(PontoTroca pontoTroca) {
         return usuarioRepository.getColecionadorByPontoTroca(pontoTroca.getId());
     }
+
+    public ColecionadorDTO converteColecionadorParaDTO(Colecionador c) {
+        return ColecionadorDTO.builder()
+                .nome(c.getNome())
+                .sobrenome(c.getSobrenome())
+                .email(c.getEmail())
+                .pontoTroca(c.getPontoTroca())
+                .contato(c.getContato())
+                .roles(c.getRoles())
+                .reputacao(c.getReputacao())
+                .figurinhasAdquiridas(c.getFigurinhasAdquiridas())
+                .figurinhasDesejadas(c.getFigurinhasDesejadas())
+                .build();
+    }
+
+
 }

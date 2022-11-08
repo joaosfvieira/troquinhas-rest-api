@@ -3,10 +3,13 @@ package br.com.ufrn.troquinhasrestapi.rest.controller;
 import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
 import br.com.ufrn.troquinhasrestapi.model.Contato;
+import br.com.ufrn.troquinhasrestapi.model.Figurinha;
+import br.com.ufrn.troquinhasrestapi.rest.dto.ColecionadorDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.CreateUserDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.CredenciaisDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.TokenDTO;
 import br.com.ufrn.troquinhasrestapi.security.JwtService;
+import br.com.ufrn.troquinhasrestapi.service.FigurinhaService;
 import br.com.ufrn.troquinhasrestapi.service.RoleService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +41,7 @@ public class ColecionadorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Colecionador salvar(@RequestBody CreateUserDTO createUserDTO) throws RoleNotFoundException{
+    public ColecionadorDTO salvar(@RequestBody CreateUserDTO createUserDTO) throws RoleNotFoundException{
         String senhaCriptografada = passwordEncoder.encode(createUserDTO.getSenha());
         createUserDTO.setSenha(senhaCriptografada);
         
@@ -64,7 +67,7 @@ public class ColecionadorController {
             roleService.addRoleToUser(colecionador.getEmail(), role);
         }
 
-        return colecionador;
+        return usuarioService.converteColecionadorParaDTO(colecionador);
     }
 
     @DeleteMapping("/{id}")
@@ -74,7 +77,7 @@ public class ColecionadorController {
 
     @GetMapping("/{id}")
     public Colecionador getColecionador(@PathVariable Integer id){
-        return usuarioService.getUsuarioById(id);
+        return usuarioService.getUsuarioById(id).orElseThrow();
     }
 
     /*
@@ -103,6 +106,16 @@ public class ColecionadorController {
         } catch (UsernameNotFoundException | SenhaInvalidaException e ){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
+    }
+
+    @GetMapping("/{idColecionador}/has-figurinha/{idFigurinha}")
+    public ColecionadorDTO adicionarFigurinhaAdquirida(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
+        return usuarioService.adicionarFigurinhaAdquirida(idColecionador, idFigurinha);
+    }
+
+    @GetMapping("/{idColecionador}/wants-figurinha/{idFigurinha}")
+    public ColecionadorDTO adicionarFigurinhaDesejada(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
+        return usuarioService.adicionarFigurinhaDesejada(idColecionador, idFigurinha);
     }
 
 

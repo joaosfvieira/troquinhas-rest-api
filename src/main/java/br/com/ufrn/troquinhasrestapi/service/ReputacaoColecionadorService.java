@@ -27,7 +27,7 @@ public class ReputacaoColecionadorService {
     }
 
     public ReputacaoColecionador addReputacaoColecionador(ReputacaoColecionador reputacaoColecionador, Integer idColecionador) {
-        Colecionador colecionador = usuarioService.getUsuarioById(idColecionador);
+        Colecionador colecionador = usuarioService.getUsuarioById(idColecionador).orElseThrow();
         ReputacaoColecionador newReputacaoColecionador = reputacaoColecionadorRepository.save(reputacaoColecionador);
         colecionador.setReputacao(newReputacaoColecionador);
         usuarioService.atualizaUsuario(colecionador);
