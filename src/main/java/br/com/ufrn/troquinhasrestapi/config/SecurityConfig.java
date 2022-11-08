@@ -36,10 +36,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v2/api-docs", "/webjars/**")
                                         .permitAll()
-
-//                                        .antMatchers(HttpMethod.POST, "/ponto-trocas", "/roles")
-//                                        .hasRole("Admin")
-
+                                        .antMatchers(HttpMethod.POST, "/ponto-trocas", "/roles")
+                                        .hasRole("ADMIN")
                                         .antMatchers(HttpMethod.GET, "/**")
                                         .authenticated()
                                         .anyRequest().authenticated()
