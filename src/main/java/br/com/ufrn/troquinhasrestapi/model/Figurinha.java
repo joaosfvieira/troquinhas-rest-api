@@ -1,5 +1,6 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import java.util.Set;
@@ -26,11 +27,13 @@ public class Figurinha {
     private String raridade;
     
     @ManyToMany(mappedBy = "figurinhasAdquiridas")
+    @JsonBackReference
 //    joinColumns=@JoinColumn(name="figurinha_id"),
 //    inverseJoinColumns=@JoinColumn(name="colecionador_id"))
     private Set<Colecionador> colecionadoresPossuem;
 
     @ManyToMany(mappedBy = "figurinhasDesejadas")
+    @JsonBackReference
 //    joinColumns=@JoinColumn(name="figurinha_id"),
 //    inverseJoinColumns=@JoinColumn(name="colecionador_id"))
     private Set<Colecionador> colecionadoresDesejam;

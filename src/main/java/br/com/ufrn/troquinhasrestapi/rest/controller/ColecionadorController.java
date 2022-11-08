@@ -3,13 +3,18 @@ package br.com.ufrn.troquinhasrestapi.rest.controller;
 import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
 import br.com.ufrn.troquinhasrestapi.model.Contato;
+import br.com.ufrn.troquinhasrestapi.model.Figurinha;
+import br.com.ufrn.troquinhasrestapi.rest.dto.ColecionadorDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.CreateUserDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.CredenciaisDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.TokenDTO;
 import br.com.ufrn.troquinhasrestapi.security.JwtService;
+import br.com.ufrn.troquinhasrestapi.service.FigurinhaService;
 import br.com.ufrn.troquinhasrestapi.service.RoleService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 import javax.management.relation.RoleNotFoundException;
 
@@ -29,9 +34,14 @@ public class ColecionadorController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    @GetMapping
+    public List<Colecionador> getColecionadores(){
+        return usuarioService.getAllUsuarios();
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Colecionador salvar(@RequestBody CreateUserDTO createUserDTO ) throws RoleNotFoundException{
+    public ColecionadorDTO salvar(@RequestBody CreateUserDTO createUserDTO) throws RoleNotFoundException{
         String senhaCriptografada = passwordEncoder.encode(createUserDTO.getSenha());
         createUserDTO.setSenha(senhaCriptografada);
         
@@ -57,16 +67,30 @@ public class ColecionadorController {
             roleService.addRoleToUser(colecionador.getEmail(), role);
         }
 
-        return colecionador;
+        return usuarioService.converteColecionadorParaDTO(colecionador);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteColecionador(@PathVariable Integer id){
+        usuarioService.removeUsuario(id);
+    }
+
+    @GetMapping("/{id}")
+    public Colecionador getColecionador(@PathVariable Integer id){
+        return usuarioService.getUsuarioById(id).orElseThrow();
     }
 
     /*
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Colecionador salvar(@RequestBody Colecionador colecionador ){
-        String senhaCriptografada = passwordEncoder.encode(colecionador.getSenha());
-        colecionador.setSenha(senhaCriptografada);
-        return usuarioService.addUsuario(colecionador);
+    @PutMapping("/{id}")
+    public Colecionador updateColecionador(@RequestBody CreateUserDTO createUserDTO, @PathVariable Integer id) throws Exception{
+        Colecionador colecionadorA = usuarioService.getUsuarioById(id);
+        if(createUserDTO != null){
+            if(createUserDTO.getEmail() == null || createUserDTO.getSenha() == null){
+                throw new Exception("ERROU AI PAI");
+            }
+            usuarioService.atualizaUsuario(colecionadorA);
+        }
+        return colecionadorA;
     }
     */
 
@@ -83,5 +107,17 @@ public class ColecionadorController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
+
+    @GetMapping("/{idColecionador}/has-figurinha/{idFigurinha}")
+    public ColecionadorDTO adicionarFigurinhaAdquirida(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
+        return usuarioService.adicionarFigurinhaAdquirida(idColecionador, idFigurinha);
+    }
+
+    @GetMapping("/{idColecionador}/wants-figurinha/{idFigurinha}")
+    public ColecionadorDTO adicionarFigurinhaDesejada(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
+        return usuarioService.adicionarFigurinhaDesejada(idColecionador, idFigurinha);
+    }
+
+
 }
 

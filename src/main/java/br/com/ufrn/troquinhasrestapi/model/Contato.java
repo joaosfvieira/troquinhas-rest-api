@@ -15,7 +15,7 @@ public class Contato {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @OneToOne(mappedBy = "contato")
     @JsonBackReference
