@@ -1,5 +1,8 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,10 +20,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "reputacao_colecionador")
+@JsonIgnoreProperties("colecionador")
 public class ReputacaoColecionador {
 
-    @OneToOne(mappedBy = "reputacao")
-    @JsonBackReference
+    @OneToOne(mappedBy = "reputacaoColecionador")
+    @JsonBackReference(value="colecionador-reputacao")
     private Colecionador colecionador;
 
     @Column(name = "reputacao")

@@ -7,9 +7,8 @@ import br.com.ufrn.troquinhasrestapi.model.Figurinha;
 import br.com.ufrn.troquinhasrestapi.model.PontoTroca;
 import br.com.ufrn.troquinhasrestapi.model.ReputacaoColecionador;
 import br.com.ufrn.troquinhasrestapi.model.Role;
-import br.com.ufrn.troquinhasrestapi.repository.FigurinhaRepository;
-import br.com.ufrn.troquinhasrestapi.repository.PontoTrocaRepository;
 import br.com.ufrn.troquinhasrestapi.repository.UsuarioRepository;
+import br.com.ufrn.troquinhasrestapi.rest.dto.ColecionadorDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,70 +16,60 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import javax.persistence.PreRemove;
+import java.util.*;
 
 @Service
 public class UsuarioService implements UserDetailsService {
     @Autowired
     UsuarioRepository usuarioRepository;
     @Autowired
-    PontoTrocaRepository pontoTrocaRepository;
+    PontoTrocaService pontoTrocaService;
     @Autowired
-    FigurinhaRepository figurinhaRepository;
+    FigurinhaService figurinhaService;
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Colecionador addUsuario(Colecionador c){ return usuarioRepository.save(c); };
+    public Colecionador save(Colecionador c){ return usuarioRepository.save(c); };
 
-    public Colecionador getUsuarioById(Integer id){
-        return usuarioRepository.findById(id).orElseThrow(() -> null);
+    public Optional<Colecionador> getUsuarioById(Integer id){
+        return usuarioRepository.findById(id);
     };
 
     public List<Colecionador> getAllUsuarios(){ return usuarioRepository.findAll(); }
 
     public void removeUsuario(Integer id){ usuarioRepository.deleteById(id); }
 
-    public Colecionador atualizaUsuario(Colecionador c){ return usuarioRepository.save(c); }
-
-    public Figurinha adicionarFigurinhaAdquirida(Integer id, Integer idFigurinha) {
-        Optional<Figurinha> f = figurinhaRepository.findById(idFigurinha);
-        Optional<Colecionador> c = usuarioRepository.findById(id);
-        if(f.isPresent() && c.isPresent()) {
-            c.get().getFigurinhasAdquiridas().add(f.get());
-            usuarioRepository.save(c.get());
-            return f.get();
-        }
-        return null;
+    public ColecionadorDTO adicionarFigurinhaAdquirida(Integer idColecionador, Integer idFigurinha) {
+        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+        colecionador.getFigurinhasAdquiridas().add(figurinha);
+        save(colecionador);
+        return converteColecionadorParaDTO(colecionador);
     }
 
-    public Figurinha adicionarFigurinhaDesejada(Integer id, Integer idFigurinha) {
-        Optional<Figurinha> f = figurinhaRepository.findById(idFigurinha);
-        Optional<Colecionador> c = usuarioRepository.findById(id);
-        if(f.isPresent() && c.isPresent()) {
-            c.get().getFigurinhasDesejadas().add(f.get());
-            usuarioRepository.save(c.get());
-            return f.get();
-        }
-        return null;
+    public ColecionadorDTO adicionarFigurinhaDesejada(Integer idColecionador, Integer idFigurinha) {
+        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+        colecionador.getFigurinhasDesejadas().add(figurinha);
+        save(colecionador);
+        return converteColecionadorParaDTO(colecionador);
     }
 
-    public List<Colecionador> getAllColecionadoresWherePontoTrocaIdEqualsId(Integer id){
-        return usuarioRepository.getAllColecionadoresWherePontoTrocaIdEqualsId(id);
+    public List<ColecionadorDTO> getColecionadoresEmPontoTroca(Integer id){
+        List<Colecionador> colecionadores = usuarioRepository.getAllColecionadoresWherePontoTrocaIdEqualsId(id);
+        List<ColecionadorDTO> colecionadoresDTO = new ArrayList<>();
+        for (Colecionador c: colecionadores)
+            colecionadoresDTO.add(converteColecionadorParaDTO(c));
+        return colecionadoresDTO;
     }
 
-    public Colecionador marcarPresenca(Integer id, Integer idPontoTroca) {
-        Optional<Colecionador> c = usuarioRepository.findById(id);
-        Optional<PontoTroca> p = pontoTrocaRepository.findById(idPontoTroca);
-        if(c.isPresent() && p.isPresent()){
-            c.get().setPontoTroca(p.get());
-            usuarioRepository.save(c.get());
-            return c.get();
-        }
-        return null;
+    public ColecionadorDTO marcarPresenca(Integer idColecionador, Integer idPontoTroca) {
+        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        PontoTroca pontoTroca = pontoTrocaService.getPontoTrocaById(idPontoTroca).orElseThrow();
+        colecionador.setPontoTroca(pontoTroca);
+        save(colecionador);
+        return converteColecionadorParaDTO(colecionador);
     }
 
     public UserDetails autenticar(Colecionador colecionador ){
@@ -97,8 +86,6 @@ public class UsuarioService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         Colecionador colecionador = usuarioRepository.findColecionadorByEmail(username);
-
-                //.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
         Collection<Role> userRoles = colecionador.getRoles();
 
         String[] roles = null;
@@ -142,4 +129,36 @@ public class UsuarioService implements UserDetailsService {
     public Colecionador getColecionadorByPontoTroca(PontoTroca pontoTroca) {
         return usuarioRepository.getColecionadorByPontoTroca(pontoTroca.getId());
     }
+
+    public ColecionadorDTO converteColecionadorParaDTO(Colecionador c) {
+        return ColecionadorDTO.builder()
+                .nome(c.getNome())
+                .sobrenome(c.getSobrenome())
+                .email(c.getEmail())
+                .pontoTroca(c.getPontoTroca())
+                .contato(c.getContato())
+                .roles(c.getRoles())
+                .reputacao(c.getReputacaoColecionador())
+                .figurinhasAdquiridas(c.getFigurinhasAdquiridas())
+                .figurinhasDesejadas(c.getFigurinhasDesejadas())
+                .build();
+    }
+
+
+//    public ColecionadorDTO removerFigurinhaAdquirida(Integer idColecionador, Integer idFigurinha) {
+//        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+//        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+//        colecionador.getFigurinhasDesejadas().remove(figurinha);
+//        save(colecionador);
+//        usuarioRepository.removeFromColecionadorHasFigurinhasTable(idColecionador, idFigurinha);
+//        return converteColecionadorParaDTO(colecionador);
+//    }
+//
+//    public ColecionadorDTO removerFigurinhaDesejada(Integer idColecionador, Integer idFigurinha) {
+//        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+//        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+//        colecionador.getFigurinhasDesejadas().remove(figurinha);
+//        save(colecionador);
+//        return converteColecionadorParaDTO(colecionador);
+//    }
 }

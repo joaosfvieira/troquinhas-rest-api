@@ -3,25 +3,30 @@ package br.com.ufrn.troquinhasrestapi.rest.controller;
 import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
 import br.com.ufrn.troquinhasrestapi.model.Figurinha;
+import br.com.ufrn.troquinhasrestapi.model.PontoTroca;
 import br.com.ufrn.troquinhasrestapi.rest.dto.FigurinhaDTO;
 import br.com.ufrn.troquinhasrestapi.service.FigurinhaService;
+import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.PreRemove;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/figurinhas")
 public class FigurinhaController {
     @Autowired
     FigurinhaService figurinhaService;
+    @Autowired
+    UsuarioService usuarioService;
 
     @GetMapping
     private List<Figurinha> list() {
@@ -30,7 +35,7 @@ public class FigurinhaController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Figurinha save(@RequestBody FigurinhaDTO figurinhaDTO){
+    public Figurinha save(@Valid @RequestBody FigurinhaDTO figurinhaDTO){
         try{
             Figurinha figurinha = Figurinha.builder()
                     .nome(figurinhaDTO.getNome())
@@ -43,6 +48,7 @@ public class FigurinhaController {
     }
 
     @GetMapping("{id}")
+    @ResponseStatus(OK)
     public ResponseEntity<Figurinha> getById(@PathVariable Integer id){
         Optional<Figurinha> figurinha = figurinhaService.getFigurinhaById(id);
         return figurinha.map(value ->
@@ -67,13 +73,23 @@ public class FigurinhaController {
     @DeleteMapping("{id}")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Integer id){
-        figurinhaService
-                .getFigurinhaById(id)
-                .map( f -> {
-                    figurinhaService.removeFigurinha(f.getId());
-                    return Void.TYPE;
-                }).orElseThrow( () ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Figurinha não encontrado."));
+        Figurinha figurinha = figurinhaService.getFigurinhaById(id).orElseThrow();
+        PreRemove(figurinha);
+        figurinhaService.removeFigurinha(id);
+    }
+
+    @PreRemove
+    private void PreRemove(Figurinha figurinha) {
+        List<Colecionador> colecionadores = usuarioService.getAllUsuarios();
+        for(Colecionador c : colecionadores) {
+            if(c.getFigurinhasAdquiridas().contains(figurinha)){
+                c.getFigurinhasAdquiridas().remove(figurinha);
+                usuarioService.save(c);
+            }
+            if(c.getFigurinhasDesejadas().contains(figurinha)){
+                c.getFigurinhasDesejadas().remove(figurinha);
+                usuarioService.save(c);
+            }
+        }
     }
 }

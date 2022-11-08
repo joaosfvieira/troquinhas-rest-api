@@ -1,5 +1,6 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Getter
 @Setter
 @Table(name = "contatos")
+@JsonIgnoreProperties({"colecionador"})
 public class Contato {
 
     @Id
@@ -18,7 +20,7 @@ public class Contato {
     private Integer id;
 
     @OneToOne(mappedBy = "contato")
-    @JsonBackReference
+    @JsonBackReference(value="colecionador-contato")
     private Colecionador colecionador;
 
     @Column(name = "contato", length=50)
