@@ -27,13 +27,13 @@ public class Figurinha {
     private String raridade;
     
     @ManyToMany(mappedBy = "figurinhasAdquiridas")
-    @JsonBackReference
+    @JsonBackReference(value="colecionador-figurinhas-adquiridas")
 //    joinColumns=@JoinColumn(name="figurinha_id"),
 //    inverseJoinColumns=@JoinColumn(name="colecionador_id"))
     private Set<Colecionador> colecionadoresPossuem;
 
     @ManyToMany(mappedBy = "figurinhasDesejadas")
-    @JsonBackReference
+    @JsonBackReference(value="colecionador-figurinhas-desejadas")
 //    joinColumns=@JoinColumn(name="figurinha_id"),
 //    inverseJoinColumns=@JoinColumn(name="colecionador_id"))
     private Set<Colecionador> colecionadoresDesejam;

@@ -3,13 +3,11 @@ package br.com.ufrn.troquinhasrestapi.rest.controller;
 import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
 import br.com.ufrn.troquinhasrestapi.model.Contato;
-import br.com.ufrn.troquinhasrestapi.model.Figurinha;
 import br.com.ufrn.troquinhasrestapi.rest.dto.ColecionadorDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.CreateUserDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.CredenciaisDTO;
 import br.com.ufrn.troquinhasrestapi.rest.dto.TokenDTO;
 import br.com.ufrn.troquinhasrestapi.security.JwtService;
-import br.com.ufrn.troquinhasrestapi.service.FigurinhaService;
 import br.com.ufrn.troquinhasrestapi.service.RoleService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +59,7 @@ public class ColecionadorController {
             colecionador.setContato(contato);
         }
         
-        colecionador = usuarioService.addUsuario(colecionador);
+        colecionador = usuarioService.save(colecionador);
         
         for (String role : createUserDTO.getRoles()) {
             roleService.addRoleToUser(colecionador.getEmail(), role);
@@ -94,6 +92,14 @@ public class ColecionadorController {
     }
     */
 
+    @PutMapping("/{id}")
+    public ColecionadorDTO update(@PathVariable Integer id, @RequestBody Colecionador colecionador){
+        Colecionador c = usuarioService.getUsuarioById(id).orElseThrow();
+        c = colecionador;
+        usuarioService.save(c);
+        return usuarioService.converteColecionadorParaDTO(c);
+    }
+
     @PostMapping("/auth")
     public TokenDTO autenticar(@RequestBody CredenciaisDTO credenciais){
         try{
@@ -116,6 +122,16 @@ public class ColecionadorController {
     @GetMapping("/{idColecionador}/wants-figurinha/{idFigurinha}")
     public ColecionadorDTO adicionarFigurinhaDesejada(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
         return usuarioService.adicionarFigurinhaDesejada(idColecionador, idFigurinha);
+    }
+
+    @GetMapping("/{idColecionador}/ponto-trocas/{idPontoTroca}")
+    public ColecionadorDTO adicionarPontoTrocaParaColecionador(@PathVariable Integer idColecionador, @PathVariable Integer idPontoTroca) {
+        return usuarioService.marcarPresenca(idColecionador, idPontoTroca);
+    }
+
+    @GetMapping("/ponto-trocas/{idPontoTroca}")
+    public List<ColecionadorDTO> listColecionadorPontoTroca(@PathVariable Integer idPontoTroca) {
+        return usuarioService.getColecionadoresEmPontoTroca(idPontoTroca);
     }
 
 

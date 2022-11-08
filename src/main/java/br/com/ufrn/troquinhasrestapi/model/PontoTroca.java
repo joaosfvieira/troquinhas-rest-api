@@ -1,5 +1,6 @@
 package br.com.ufrn.troquinhasrestapi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ public class PontoTroca {
     private String nome;
 
 	@OneToMany(mappedBy="pontoTroca")
+	@JsonIgnore
 	private Set<Colecionador> colecionadores;
 
 	public Integer getId() {

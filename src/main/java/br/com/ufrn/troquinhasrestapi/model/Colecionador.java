@@ -8,7 +8,6 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -40,28 +39,28 @@ public class Colecionador {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "contato_id", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonManagedReference(value="colecionador-contato")
     Contato contato;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    @OneToOne //(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reputacao_colecionador_id", referencedColumnName = "id")
-    @JsonManagedReference
-    private ReputacaoColecionador reputacao;
+    @JsonManagedReference(value="colecionador-reputacao")
+    private ReputacaoColecionador reputacaoColecionador;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
     @JoinTable(name="colecionador_has_figurinhas",
     joinColumns=@JoinColumn(name="colecionador_id"),
     inverseJoinColumns=@JoinColumn(name="figurinha_id"))
-    @JsonManagedReference
+    @JsonManagedReference(value="colecionador-figurinhas-adquiridas")
     private Set<Figurinha> figurinhasAdquiridas;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
 	@JoinTable(name="colecionador_wants_figurinhas",
 			joinColumns=@JoinColumn(name="colecionador_id"),
 			inverseJoinColumns=@JoinColumn(name="figurinha_id"))
-    @JsonManagedReference
+    @JsonManagedReference(value="colecionador-figurinhas-desejadas")
 	private Set<Figurinha> figurinhasDesejadas;
 }

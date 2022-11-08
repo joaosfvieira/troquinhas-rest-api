@@ -18,7 +18,7 @@ public class Contato {
     private Integer id;
 
     @OneToOne(mappedBy = "contato")
-    @JsonBackReference
+    @JsonBackReference(value="colecionador-contato")
     private Colecionador colecionador;
 
     @Column(name = "contato", length=50)

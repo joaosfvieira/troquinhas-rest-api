@@ -25,7 +25,6 @@ import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequiredArgsConstructor
@@ -78,7 +77,7 @@ public class PontoTrocaController {
         for(Colecionador c : colecionadores) {
             if(c.getPontoTroca() == pontoTroca.get()){
                 c.setPontoTroca(null);
-                usuarioService.atualizaUsuario(c);
+                usuarioService.save(c);
             }
         }
     }

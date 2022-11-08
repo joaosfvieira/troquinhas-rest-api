@@ -42,7 +42,7 @@ public class ContatoController {
 
         contatoService.addContato(toSaveContato);
         toSetColecionador.setContato(toSaveContato);
-        usuarioService.atualizaUsuario(toSetColecionador);
+        usuarioService.save(toSetColecionador);
 
         return ResponseEntity.ok().body(toSaveContato);
     }
@@ -51,7 +51,7 @@ public class ContatoController {
     public ResponseEntity<?> deleteContato(@PathVariable Integer id){
         Colecionador colecionador = usuarioService.getColecionadorByContato(contatoService.getContatoById(id).orElseThrow());
         colecionador.setContato(null);
-        usuarioService.atualizaUsuario(colecionador);
+        usuarioService.save(colecionador);
         contatoService.removeContato(id);
         return ResponseEntity.ok().build();
     }
