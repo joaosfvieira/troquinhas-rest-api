@@ -29,6 +29,7 @@ public class FigurinhaController {
     UsuarioService usuarioService;
 
     @GetMapping
+    @ResponseStatus(OK)
     private List<Figurinha> list() {
         return figurinhaService.getAllFigurinhas();
     }

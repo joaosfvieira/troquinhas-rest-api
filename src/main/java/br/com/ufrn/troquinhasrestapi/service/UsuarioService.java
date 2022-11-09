@@ -87,20 +87,18 @@ public class UsuarioService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         Colecionador colecionador = usuarioRepository.findColecionadorByEmail(username);
         Collection<Role> userRoles = colecionador.getRoles();
-
         String[] roles = null;
-        System.out.println(" !!!!!!!  roles = null  !!!!!!!!!!!!!!");
+
         for (Role role : userRoles) {
             if(Objects.equals(role.getName(), "Admin")){
                 roles =  new String[] { "ADMIN", "USER" };
-                System.out.println(" ROLES = ADMIN USER");
-            }else{
+            } else if (Objects.equals(role.getName(), "Developer")){
                 roles =  new String[] {"USER" };
-                System.out.println(" ROLES = ADMIN USER");
+            } else if (Objects.equals(role.getName(), "User")){
+                roles = new String[] {"DEVELOPER"};
             }
-        }
 
-        //String[] roles =  new String[] { "ADMIN", "USER" } : new String[] { "USER" };
+        }
 
         return User
                 .builder()

@@ -28,7 +28,6 @@ import static org.springframework.http.HttpStatus.*;
 public class ReputacaoColecionadorController {
     @Autowired
     ReputacaoColecionadorService reputacaoColecionadorService;
-
     @Autowired
     UsuarioService usuarioService;
 

@@ -24,8 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/colecionadores")
@@ -74,7 +73,7 @@ public class ColecionadorController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(OK)
+    @ResponseStatus(NO_CONTENT)
     public void deleteColecionador(@PathVariable Integer id){
         usuarioService.removeUsuario(id);
     }
