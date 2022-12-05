@@ -1,12 +1,7 @@
 package br.com.ufrn.troquinhasrestapi.service;
 
 import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
-import br.com.ufrn.troquinhasrestapi.model.Colecionador;
-import br.com.ufrn.troquinhasrestapi.model.Contato;
-import br.com.ufrn.troquinhasrestapi.model.Figurinha;
-import br.com.ufrn.troquinhasrestapi.model.PontoTroca;
-import br.com.ufrn.troquinhasrestapi.model.ReputacaoColecionador;
-import br.com.ufrn.troquinhasrestapi.model.Role;
+import br.com.ufrn.troquinhasrestapi.model.*;
 import br.com.ufrn.troquinhasrestapi.repository.UsuarioRepository;
 import br.com.ufrn.troquinhasrestapi.rest.dto.ColecionadorDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +24,10 @@ public class UsuarioService implements UserDetailsService {
     FigurinhaService figurinhaService;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    AlbumPessoalService albumPessoalService;
+    @Autowired
+    AlbumTipoService albumTipoService;
 
     public Colecionador save(Colecionador c){ return usuarioRepository.save(c); };
 
@@ -40,18 +39,20 @@ public class UsuarioService implements UserDetailsService {
 
     public void removeUsuario(Integer id){ usuarioRepository.deleteById(id); }
 
-    public ColecionadorDTO adicionarFigurinhaAdquirida(Integer idColecionador, Integer idFigurinha) {
+    public ColecionadorDTO adicionarFigurinhaAdquirida(Integer idColecionador, Integer idAlbumPessoal, Integer idFigurinha) {
         Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        AlbumPessoal albumPessoal = albumPessoalService.getAlbumPessoalById(idAlbumPessoal).orElseThrow();
         Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
-        colecionador.getFigurinhasAdquiridas().add(figurinha);
+        albumPessoal.getFigurinhasAdquiridas().add(figurinha);
         save(colecionador);
         return converteColecionadorParaDTO(colecionador);
     }
 
-    public ColecionadorDTO adicionarFigurinhaDesejada(Integer idColecionador, Integer idFigurinha) {
+    public ColecionadorDTO adicionarFigurinhaDesejada(Integer idColecionador, Integer idAlbumPessoal, Integer idFigurinha) {
         Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        AlbumPessoal albumPessoal = albumPessoalService.getAlbumPessoalById(idAlbumPessoal).orElseThrow();
         Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
-        colecionador.getFigurinhasDesejadas().add(figurinha);
+        albumPessoal.getFigurinhasDesejadas().add(figurinha);
         save(colecionador);
         return converteColecionadorParaDTO(colecionador);
     }
@@ -89,18 +90,13 @@ public class UsuarioService implements UserDetailsService {
         Collection<Role> userRoles = colecionador.getRoles();
 
         String[] roles = null;
-        System.out.println(" !!!!!!!  roles = null  !!!!!!!!!!!!!!");
         for (Role role : userRoles) {
             if(Objects.equals(role.getName(), "Admin")){
                 roles =  new String[] { "ADMIN", "USER" };
-                System.out.println(" ROLES = ADMIN USER");
             }else{
                 roles =  new String[] {"USER" };
-                System.out.println(" ROLES = ADMIN USER");
             }
         }
-
-        //String[] roles =  new String[] { "ADMIN", "USER" } : new String[] { "USER" };
 
         return User
                 .builder()
@@ -139,26 +135,36 @@ public class UsuarioService implements UserDetailsService {
                 .contato(c.getContato())
                 .roles(c.getRoles())
                 .reputacao(c.getReputacaoColecionador())
-                .figurinhasAdquiridas(c.getFigurinhasAdquiridas())
-                .figurinhasDesejadas(c.getFigurinhasDesejadas())
+                .albunsPessoais(c.getAlbunsPessoais())
                 .build();
     }
 
 
-//    public ColecionadorDTO removerFigurinhaAdquirida(Integer idColecionador, Integer idFigurinha) {
-//        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
-//        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
-//        colecionador.getFigurinhasDesejadas().remove(figurinha);
-//        save(colecionador);
-//        usuarioRepository.removeFromColecionadorHasFigurinhasTable(idColecionador, idFigurinha);
-//        return converteColecionadorParaDTO(colecionador);
-//    }
-//
-//    public ColecionadorDTO removerFigurinhaDesejada(Integer idColecionador, Integer idFigurinha) {
-//        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
-//        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
-//        colecionador.getFigurinhasDesejadas().remove(figurinha);
-//        save(colecionador);
-//        return converteColecionadorParaDTO(colecionador);
-//    }
+    public ColecionadorDTO removerFigurinhaAdquirida(Integer idColecionador, Integer idAlbumPessoal, Integer idFigurinha) {
+        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        AlbumPessoal albumPessoal = albumPessoalService.getAlbumPessoalById(idAlbumPessoal).orElseThrow();
+        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+        albumPessoal.getFigurinhasAdquiridas().remove(figurinha);
+        save(colecionador);
+        return converteColecionadorParaDTO(colecionador);
+    }
+
+    public ColecionadorDTO removerFigurinhaDesejada(Integer idColecionador, Integer idAlbumPessoal, Integer idFigurinha) {
+        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        AlbumPessoal albumPessoal = albumPessoalService.getAlbumPessoalById(idAlbumPessoal).orElseThrow();
+        Figurinha figurinha = figurinhaService.getFigurinhaById(idFigurinha).orElseThrow();
+        albumPessoal.getFigurinhasDesejadas().remove(figurinha);
+        save(colecionador);
+        return converteColecionadorParaDTO(colecionador);
+    }
+
+    public AlbumPessoal adicionarAlbumPessoal(Integer idColecionador, Integer idAlbumTipo) {
+        Colecionador colecionador = getUsuarioById(idColecionador).orElseThrow();
+        AlbumTipo albumTipo = albumTipoService.getAlbumTipoById(idAlbumTipo).orElseThrow();
+        AlbumPessoal albumPessoal =  AlbumPessoal.builder()
+                                        .colecionador(colecionador)
+                                        .albumTipo(albumTipo)
+                                        .build();
+        return albumPessoalService.save(albumPessoal);
+    }
 }

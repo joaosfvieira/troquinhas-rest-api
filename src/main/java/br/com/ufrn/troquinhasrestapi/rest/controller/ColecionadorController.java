@@ -1,6 +1,7 @@
 package br.com.ufrn.troquinhasrestapi.rest.controller;
 
 import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
+import br.com.ufrn.troquinhasrestapi.model.AlbumPessoal;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
 import br.com.ufrn.troquinhasrestapi.model.Contato;
 import br.com.ufrn.troquinhasrestapi.rest.dto.ColecionadorDTO;
@@ -10,6 +11,7 @@ import br.com.ufrn.troquinhasrestapi.rest.dto.TokenDTO;
 import br.com.ufrn.troquinhasrestapi.security.JwtService;
 import br.com.ufrn.troquinhasrestapi.service.RoleService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -54,7 +56,7 @@ public class ColecionadorController {
         colecionador.setSenha(senhaCriptografada);
         colecionador.setSobrenome(createUserDTO.getSobrenome());
         
-        if(createUserDTO.getContato()!=null){
+        if(createUserDTO.getContato() != null){
             String[] strContato = createUserDTO.getContato();
             Contato contato = new Contato();
             contato.setColecionador(colecionador);
@@ -115,29 +117,44 @@ public class ColecionadorController {
         }
     }
 
-    @GetMapping("/{idColecionador}/has-figurinha/{idFigurinha}")
-    @ResponseStatus(OK)
-    public ColecionadorDTO adicionarFigurinhaAdquirida(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
-        return usuarioService.adicionarFigurinhaAdquirida(idColecionador, idFigurinha);
+    @PostMapping("/{idColecionador}/album-pessoal/{idAlbumTipo}")
+    @ResponseStatus(CREATED)
+    public AlbumPessoal adicionarAlbumPessoal(@PathVariable Integer idColecionador,
+                                              @PathVariable Integer idAlbumTipo) {
+        return usuarioService.adicionarAlbumPessoal(idColecionador, idAlbumTipo);
     }
 
-    @GetMapping("/{idColecionador}/wants-figurinha/{idFigurinha}")
+    @PostMapping("/{idColecionador}/{idAlbumPessoal}/has-figurinha/{idFigurinha}")
     @ResponseStatus(OK)
-    public ColecionadorDTO adicionarFigurinhaDesejada(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
-        return usuarioService.adicionarFigurinhaDesejada(idColecionador, idFigurinha);
+    public ColecionadorDTO adicionarFigurinhaAdquirida(@PathVariable Integer idColecionador,
+                                                       @PathVariable Integer idAlbumPessoal,
+                                                       @PathVariable Integer idFigurinha) {
+        return usuarioService.adicionarFigurinhaAdquirida(idColecionador, idAlbumPessoal, idFigurinha);
     }
 
-//    @GetMapping("/{idColecionador}/remove-has-figurinha/{idFigurinha}")
-//    @ResponseStatus(OK)
-//    public ColecionadorDTO removerFigurinhaAdquirida(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
-//        return usuarioService.removerFigurinhaAdquirida(idColecionador, idFigurinha);
-//    }
-//
-//    @GetMapping("/{idColecionador}/remove-wants-figurinha/{idFigurinha}")
-//    @ResponseStatus(OK)
-//    public ColecionadorDTO removerFigurinhaDesejada(@PathVariable Integer idColecionador, @PathVariable Integer idFigurinha) {
-//        return usuarioService.removerFigurinhaDesejada(idColecionador, idFigurinha);
-//    }
+    @PostMapping("/{idColecionador}/{idAlbumPessoal}/wants-figurinha/{idFigurinha}")
+    @ResponseStatus(OK)
+    public ColecionadorDTO adicionarFigurinhaDesejada(@PathVariable Integer idColecionador,
+                                                      @PathVariable Integer idAlbumPessoal,
+                                                      @PathVariable Integer idFigurinha) {
+        return usuarioService.adicionarFigurinhaDesejada(idColecionador, idAlbumPessoal, idFigurinha);
+    }
+
+    @DeleteMapping("/{idColecionador}/{idAlbumPessoal}/has-figurinha/{idFigurinha}")
+    @ResponseStatus(OK)
+    public ColecionadorDTO removerFigurinhaAdquirida(@PathVariable Integer idColecionador,
+                                                     @PathVariable Integer idAlbumPessoal,
+                                                     @PathVariable Integer idFigurinha) {
+        return usuarioService.removerFigurinhaAdquirida(idColecionador, idAlbumPessoal, idFigurinha);
+    }
+
+    @DeleteMapping("/{idColecionador}/{idAlbumPessoal}/wants-figurinha/{idFigurinha}")
+    @ResponseStatus(OK)
+    public ColecionadorDTO removerFigurinhaDesejada(@PathVariable Integer idColecionador,
+                                                    @PathVariable Integer idAlbumPessoal,
+                                                    @PathVariable Integer idFigurinha) {
+        return usuarioService.removerFigurinhaDesejada(idColecionador, idAlbumPessoal, idFigurinha);
+    }
 
     @GetMapping("/{idColecionador}/ponto-trocas/{idPontoTroca}")
     @ResponseStatus(OK)

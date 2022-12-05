@@ -23,22 +23,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @JsonIgnoreProperties("colecionador")
 public class ReputacaoColecionador {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @OneToOne(mappedBy = "reputacaoColecionador")
     @JsonBackReference(value="colecionador-reputacao")
     private Colecionador colecionador;
 
     @Column(name = "reputacao")
     private int reputacao;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
 }

@@ -1,10 +1,10 @@
 package br.com.ufrn.troquinhasrestapi.rest.controller;
 
-import br.com.ufrn.troquinhasrestapi.exception.SenhaInvalidaException;
+import br.com.ufrn.troquinhasrestapi.model.AlbumPessoal;
 import br.com.ufrn.troquinhasrestapi.model.Colecionador;
 import br.com.ufrn.troquinhasrestapi.model.Figurinha;
-import br.com.ufrn.troquinhasrestapi.model.PontoTroca;
 import br.com.ufrn.troquinhasrestapi.rest.dto.FigurinhaDTO;
+import br.com.ufrn.troquinhasrestapi.service.AlbumTipoService;
 import br.com.ufrn.troquinhasrestapi.service.FigurinhaService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,8 @@ public class FigurinhaController {
     FigurinhaService figurinhaService;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    AlbumTipoService albumTipoService;
 
     @GetMapping
     private List<Figurinha> list() {
@@ -40,6 +42,7 @@ public class FigurinhaController {
             Figurinha figurinha = Figurinha.builder()
                     .nome(figurinhaDTO.getNome())
                     .raridade(figurinhaDTO.getRaridade())
+                    .albumTipo(albumTipoService.getAlbumTipoById(figurinhaDTO.getIdAlbumTipo()).orElseThrow())
                     .build();
             return figurinhaService.addFigurinha(figurinha);
         } catch (Exception e ){
@@ -78,17 +81,18 @@ public class FigurinhaController {
         figurinhaService.removeFigurinha(id);
     }
 
-    @PreRemove
     private void PreRemove(Figurinha figurinha) {
         List<Colecionador> colecionadores = usuarioService.getAllUsuarios();
         for(Colecionador c : colecionadores) {
-            if(c.getFigurinhasAdquiridas().contains(figurinha)){
-                c.getFigurinhasAdquiridas().remove(figurinha);
-                usuarioService.save(c);
-            }
-            if(c.getFigurinhasDesejadas().contains(figurinha)){
-                c.getFigurinhasDesejadas().remove(figurinha);
-                usuarioService.save(c);
+            for(AlbumPessoal ap : c.getAlbunsPessoais()){
+                if(ap.getFigurinhasAdquiridas().contains(figurinha)){
+                    ap.getFigurinhasAdquiridas().remove(figurinha);
+                    usuarioService.save(c);
+                }
+                if(ap.getFigurinhasDesejadas().contains(figurinha)){
+                    ap.getFigurinhasDesejadas().remove(figurinha);
+                    usuarioService.save(c);
+                }
             }
         }
     }

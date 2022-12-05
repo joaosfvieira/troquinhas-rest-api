@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -55,15 +56,19 @@ public class Colecionador {
     @JsonManagedReference(value="colecionador-reputacao")
     private ReputacaoColecionador reputacaoColecionador;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
-    @JoinTable(name="colecionador_has_figurinhas",
-            joinColumns=@JoinColumn(name="colecionador_id"),
-            inverseJoinColumns=@JoinColumn(name="figurinha_id"))
-    private Set<Figurinha> figurinhasAdquiridas;
+    @OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
+    @JoinColumn(name = "colecionador_id", referencedColumnName = "id")
+    private Set<AlbumPessoal> albunsPessoais;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
-	@JoinTable(name="colecionador_wants_figurinhas",
-			joinColumns=@JoinColumn(name="colecionador_id"),
-			inverseJoinColumns=@JoinColumn(name="figurinha_id"))
-	private Set<Figurinha> figurinhasDesejadas;
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
+//    @JoinTable(name="colecionador_has_figurinhas",
+//            joinColumns=@JoinColumn(name="colecionador_id"),
+//            inverseJoinColumns=@JoinColumn(name="figurinha_id"))
+//    private Set<Figurinha> figurinhasAdquiridas;
+//
+//	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
+//	@JoinTable(name="colecionador_wants_figurinhas",
+//			joinColumns=@JoinColumn(name="colecionador_id"),
+//			inverseJoinColumns=@JoinColumn(name="figurinha_id"))
+//	private Set<Figurinha> figurinhasDesejadas;
 }
