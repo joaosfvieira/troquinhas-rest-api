@@ -11,7 +11,6 @@ import br.com.ufrn.troquinhasrestapi.rest.dto.TokenDTO;
 import br.com.ufrn.troquinhasrestapi.security.JwtService;
 import br.com.ufrn.troquinhasrestapi.service.RoleService;
 import br.com.ufrn.troquinhasrestapi.service.UsuarioService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -19,6 +18,7 @@ import java.util.List;
 import javax.management.relation.RoleNotFoundException;
 import javax.validation.Valid;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
