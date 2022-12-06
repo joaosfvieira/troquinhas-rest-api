@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @NoArgsConstructor
@@ -14,4 +15,5 @@ public class FigurinhaDTO {
     private String nome;
     @NotBlank(message = "Necessário informar raridade")
     private String raridade;
+    private Integer idAlbumTipo;
 }

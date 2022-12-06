@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -22,6 +23,7 @@ public class ColecionadorDTO {
     private Contato contato;
     private Collection<Role> roles;
     private ReputacaoColecionador reputacao;
-    private Set<Figurinha> figurinhasAdquiridas;
-    private Set<Figurinha> figurinhasDesejadas;
+//    private Set<Figurinha> figurinhasAdquiridas;
+//    private Set<Figurinha> figurinhasDesejadas;
+    private Set<AlbumPessoal> albunsPessoais;
 }

@@ -31,10 +31,13 @@ public class Figurinha {
     
     @ManyToMany(mappedBy = "figurinhasAdquiridas")
     @JsonIgnore
-    private Set<Colecionador> colecionadoresPossuem;
+    private Set<AlbumPessoal> colecionadoresPossuem;
 
     @ManyToMany(mappedBy = "figurinhasDesejadas")
     @JsonIgnore
-    private Set<Colecionador> colecionadoresDesejam;
+    private Set<AlbumPessoal> colecionadoresDesejam;
+
+    @ManyToOne
+    private AlbumTipo albumTipo;
 
 }
