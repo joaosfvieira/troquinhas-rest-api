@@ -5,6 +5,7 @@ import br.com.ufrn.troquinhasrestapi.repository.AlbumPessoalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,4 +20,8 @@ public class AlbumPessoalService {
     public AlbumPessoal save(AlbumPessoal albumPessoal) {
         return albumPessoalRepository.save(albumPessoal);
     }
+
+    public List<AlbumPessoal> getAllAlbumPessoal(){ return albumPessoalRepository.findAll(); }
+
+    public void removeAlbumPessoal(Integer id){ albumPessoalRepository.deleteById(id); }
 }
