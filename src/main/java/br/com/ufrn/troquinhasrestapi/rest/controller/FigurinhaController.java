@@ -31,6 +31,7 @@ public class FigurinhaController {
     AlbumTipoService albumTipoService;
 
     @GetMapping
+    @ResponseStatus(OK)
     private List<Figurinha> list() {
         return figurinhaService.getAllFigurinhas();
     }

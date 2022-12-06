@@ -88,16 +88,18 @@ public class UsuarioService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         Colecionador colecionador = usuarioRepository.findColecionadorByEmail(username);
         Collection<Role> userRoles = colecionador.getRoles();
-
         String[] roles = null;
+        
         for (Role role : userRoles) {
             if(Objects.equals(role.getName(), "Admin")){
                 roles =  new String[] { "ADMIN", "USER" };
-            }else{
+            } else if (Objects.equals(role.getName(), "Developer")){
                 roles =  new String[] {"USER" };
+            } else if (Objects.equals(role.getName(), "User")){
+                roles = new String[] {"DEVELOPER"};
             }
         }
-
+        
         return User
                 .builder()
                 .username(colecionador.getEmail())

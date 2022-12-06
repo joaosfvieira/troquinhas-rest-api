@@ -33,7 +33,6 @@ public class PontoTrocaController {
 
     @Autowired
     private PontoTrocaService pontoTrocaService;
-
     @Autowired
     private UsuarioService usuarioService;
 

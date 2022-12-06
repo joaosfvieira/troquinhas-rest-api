@@ -60,7 +60,7 @@ public class ContatoController {
         colecionador.setContato(null);
         usuarioService.save(colecionador);
         contatoService.removeContato(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("{id}")

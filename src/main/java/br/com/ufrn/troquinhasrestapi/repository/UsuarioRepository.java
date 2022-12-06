@@ -36,4 +36,5 @@ public interface UsuarioRepository extends JpaRepository<Colecionador, Integer> 
 //    @Query("DELETE FROM Colecionador.figurinhasAdquiridas b WHERE :idColecionador = colecionador_id AND :idFigurinha = figurinha_id")
 //    public void removeFromColecionadorHasFigurinhasTable(@Param("idColecionador") Integer idColecionador,
 //                                                         @Param("idFigurinha") Integer idFigurinha);
+
 }

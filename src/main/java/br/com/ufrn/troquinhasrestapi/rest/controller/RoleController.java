@@ -49,7 +49,7 @@ public class RoleController {
     @ResponseStatus(NO_CONTENT)
     public ResponseEntity<?> deleteRole(@PathVariable Integer id) throws NameNotFoundException{
         roleService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("{id}")
