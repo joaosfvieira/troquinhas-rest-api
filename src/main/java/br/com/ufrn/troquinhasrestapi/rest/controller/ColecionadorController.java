@@ -87,6 +87,11 @@ public class ColecionadorController {
         return usuarioService.getUsuarioById(id).orElseThrow();
     }
 
+    @GetMapping("/email/{email}")
+    public Colecionador getColecionadorByEmail(@PathVariable String email) {
+        return usuarioService.getUsuarioByEmail(email);
+    }
+
     @PutMapping("/{id}")
     @ResponseStatus(OK)
     public ColecionadorDTO update(@PathVariable Integer id, @RequestBody Colecionador colecionador){
