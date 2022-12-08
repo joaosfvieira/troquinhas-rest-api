@@ -65,7 +65,7 @@ public class JwtService {
      
     public boolean tokenValido( String token ){
         try{
-            Claims claims = (Claims) obterClaims(token);
+            Claims claims = obterClaims(token);
             Date dataExpiracao = claims.getExpiration();
             LocalDateTime data =
                     dataExpiracao.toInstant()
@@ -78,6 +78,6 @@ public class JwtService {
     
 
     public String obterLoginUsuario(String token) throws ExpiredJwtException{
-        return (String) (obterClaims(token)).getSubject();
+        return (obterClaims(token)).getSubject();
     }
 }

@@ -14,24 +14,24 @@ import java.util.List;
 public interface UsuarioRepository extends JpaRepository<Colecionador, Integer> {
 
     @Query("SELECT u FROM Colecionador u WHERE pontos_troca_id = :id")
-    public List<Colecionador> getAllColecionadoresWherePontoTrocaIdEqualsId(@Param("id") Integer id);
+    List<Colecionador> getAllColecionadoresWherePontoTrocaIdEqualsId(@Param("id") Integer id);
 
     @Query("SELECT u from Colecionador u WHERE email = :email")
-    public Colecionador findColecionadorByEmail(@Param("email") String email);
+    Colecionador findColecionadorByEmail(@Param("email") String email);
 
-    public Colecionador findByEmail(String email);
+    Colecionador findByEmail(String email);
 
     @Query("UPDATE Colecionador set contato_id=null where id = :id")
-    public void deleteContatoById(@Param("id") Integer id);
+    void deleteContatoById(@Param("id") Integer id);
 
     @Query("SELECT u FROM Colecionador u WHERE contato_id = :id")
-    public Colecionador getColecionadorByContato(@Param("id") Integer id);
+    Colecionador getColecionadorByContato(@Param("id") Integer id);
 
     @Query("SELECT u FROM Colecionador u WHERE reputacao_colecionador_id = :id")
-    public Colecionador getColecionadorByReputacaoColecionador(@Param("id") Integer id);
+    Colecionador getColecionadorByReputacaoColecionador(@Param("id") Integer id);
 
     @Query("SELECT u FROM Colecionador u WHERE pontos_troca_id = :id")
-    public Colecionador getColecionadorByPontoTroca(@Param("id") Integer id);
+    Colecionador getColecionadorByPontoTroca(@Param("id") Integer id);
 
 //    @Query("DELETE FROM Colecionador.figurinhasAdquiridas b WHERE :idColecionador = colecionador_id AND :idFigurinha = figurinha_id")
 //    public void removeFromColecionadorHasFigurinhasTable(@Param("idColecionador") Integer idColecionador,

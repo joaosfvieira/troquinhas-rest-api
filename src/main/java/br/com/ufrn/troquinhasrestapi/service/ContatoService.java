@@ -25,12 +25,12 @@ public class ContatoService {
     @Autowired
     UsuarioService usuarioService;
 
-    public Contato addContato(Contato c){ return contatoRepository.save(c); };
+    public Contato addContato(Contato c){ return contatoRepository.save(c); }
 
     public Optional<Contato> getContatoById(Integer id){
         Optional<Contato> contato = contatoRepository.findById(id);
         return contato;
-    };
+    }
 
     public List<Contato> getAllContatos(){ return contatoRepository.findAll(); }
 

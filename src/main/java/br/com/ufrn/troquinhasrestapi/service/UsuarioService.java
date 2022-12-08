@@ -29,11 +29,11 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     AlbumTipoService albumTipoService;
 
-    public Colecionador save(Colecionador c){ return usuarioRepository.save(c); };
+    public Colecionador save(Colecionador c){ return usuarioRepository.save(c); }
 
     public Optional<Colecionador> getUsuarioById(Integer id){
         return usuarioRepository.findById(id);
-    };
+    }
 
     public List<Colecionador> getAllUsuarios(){ return usuarioRepository.findAll(); }
 

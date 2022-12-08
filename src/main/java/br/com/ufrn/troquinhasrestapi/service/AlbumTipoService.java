@@ -17,7 +17,7 @@ public class AlbumTipoService {
         return albumTipoRepository.findById(id);
     }
 
-    public AlbumTipo save(AlbumTipo albumTipo){ return albumTipoRepository.save(albumTipo); };
+    public AlbumTipo save(AlbumTipo albumTipo){ return albumTipoRepository.save(albumTipo); }
 
     public List<AlbumTipo> getAllAlbumTipo(){ return albumTipoRepository.findAll(); }
 

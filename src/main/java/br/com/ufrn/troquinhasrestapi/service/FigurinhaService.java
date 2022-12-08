@@ -15,12 +15,12 @@ public class FigurinhaService {
     @Autowired
     FigurinhaRepository figurinhaRepository;
 
-    public Figurinha addFigurinha(Figurinha f){ return figurinhaRepository.save(f); };
+    public Figurinha addFigurinha(Figurinha f){ return figurinhaRepository.save(f); }
 
     public Optional<Figurinha> getFigurinhaById(Integer id){
         Optional<Figurinha> figurinha = figurinhaRepository.findById(id);
         return figurinha;
-    };
+    }
 
     public List<Figurinha> getAllFigurinhas(){ return figurinhaRepository.findAll(); }
 

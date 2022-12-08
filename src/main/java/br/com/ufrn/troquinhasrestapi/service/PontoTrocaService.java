@@ -15,12 +15,12 @@ public class PontoTrocaService {
     @Autowired
     PontoTrocaRepository pontoTrocaRepository;
 
-    public PontoTroca addPontoTroca(PontoTroca p){ return pontoTrocaRepository.save(p); };
+    public PontoTroca addPontoTroca(PontoTroca p){ return pontoTrocaRepository.save(p); }
 
     public Optional<PontoTroca> getPontoTrocaById(Integer id){
         Optional<PontoTroca> pontoTroca = pontoTrocaRepository.findById(id);
         return pontoTroca;
-    };
+    }
 
     public List<PontoTroca> getAllPontoTroca(){ return pontoTrocaRepository.findAll(); }
 
