@@ -22,6 +22,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/figurinhas")
+@CrossOrigin
 public class FigurinhaController {
     @Autowired
     FigurinhaService figurinhaService;

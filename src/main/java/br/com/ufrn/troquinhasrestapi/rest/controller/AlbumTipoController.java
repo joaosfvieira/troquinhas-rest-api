@@ -12,6 +12,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RequestMapping("/album-tipo")
 @RestController
+@CrossOrigin
 public class AlbumTipoController {
     @Autowired
     AlbumTipoService albumTipoService;

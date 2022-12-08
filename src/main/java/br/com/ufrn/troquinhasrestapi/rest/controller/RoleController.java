@@ -20,6 +20,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/roles")
+@CrossOrigin
 public class RoleController {
     
     @Autowired

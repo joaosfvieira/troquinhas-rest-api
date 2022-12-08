@@ -23,6 +23,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/contatos")
+@CrossOrigin
 public class ContatoController {
     @Autowired
     private ContatoService contatoService;

@@ -31,6 +31,7 @@ import static org.springframework.http.HttpStatus.*;
 @RestController
 @RequestMapping("/colecionadores")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ColecionadorController {
     private final UsuarioService usuarioService;
     private final RoleService roleService;
